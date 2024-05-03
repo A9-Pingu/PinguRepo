@@ -7,7 +7,7 @@
         Consumable,
         All
     }
-
+    //
     public enum e_ItemStatusType
     {
         Attack = 0,
