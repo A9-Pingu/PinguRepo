@@ -11,6 +11,7 @@ namespace ConsoleGame.Managers
 {
     public class Enemy
     {
+
         public string Name { get; set; }
         public int Level { get; set; }
         public int Health { get; set; }
@@ -27,6 +28,17 @@ namespace ConsoleGame.Managers
             Attack = CalculateAttack(level);
             this.isDead = isDead;
         }
+        public Enemy DeepCopy()
+        {
+            Enemy enemy = new Enemy(Name,Level,isDead);
+            enemy.Name = Name;
+            enemy.Level = Level;
+            enemy.Health = Health;
+            enemy.Attack = Attack;
+            enemy.isDead = isDead;
+            return enemy;
+        }
+        
 
         //플레이어 레벨 반영하여 몬스터 체력 조정
         private int CalculateHealth(int level)

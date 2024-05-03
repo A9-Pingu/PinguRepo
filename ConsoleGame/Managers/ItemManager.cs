@@ -18,9 +18,13 @@ namespace ConsoleGame.Managers
             ItemInfos.Add(new Item(UniqueKey++, "북극곰의 투구", ItemType.Armor, 1200, SetItemStatus(e_ItemStatusType.Defense, 10), "털갈이를 하는 북극곰의 옆에서 채취해 만든 투구입니다."));
             ItemInfos.Add(new Item(UniqueKey++, "순록의 털옷", ItemType.Armor, 2100, SetItemStatus(e_ItemStatusType.Defense, 15), "북극에서 천적에 의해 사냥당한 순록의 털로 만든 옷입니다."));
             ItemInfos.Add(new Item(UniqueKey++, "방문객의 연구복", ItemType.Armor, 3000, SetItemStatus(e_ItemStatusType.Defense, 20), "이곳을 연구하는 연구원이 마지막으로 남기고 간 옷입니다."));
+            ItemInfos.Add(new Item(UniqueKey++, "알", ItemType.Consumable, 1000, SetItemStatus(e_ItemStatusType.AdditionalDamage, 5), "폭탄은 예술입니다."));
+            ItemInfos.Add(new Item(UniqueKey++, "눈덩이", ItemType.Consumable, 1500, SetItemStatus(e_ItemStatusType.AdditionalDamage, 10), "무언가를 눈으로 감싸만든 눈덩이입니다."));
+            ItemInfos.Add(new Item(UniqueKey++, "고드름", ItemType.Consumable, 2400, SetItemStatus(e_ItemStatusType.AdditionalDamage, 20), "가시와 동급이거나 그 이상입니다."));
+            ItemInfos.Add(new Item(UniqueKey++, "뼈다귀 부메랑", ItemType.Consumable, 3000, SetItemStatus(e_ItemStatusType.AdditionalDamage, 30), "사랑은 돌아오는 거야!"));
             ItemInfos.Add(new Item(UniqueKey++, "새우", ItemType.Consumable, 200, SetItemStatus(e_ItemStatusType.RecoveryHp, 20), "맛있습니다! 체력을 20 회복하는 음식입니다."));
             ItemInfos.Add(new Item(UniqueKey++, "조개살 죽", ItemType.Consumable, 200, SetItemStatus(e_ItemStatusType.RecoveryMp, 20), "물개 아저씨의 야심작입니다! 마나를 20 회복하는 음식입니다."));
-            ItemInfos.Add(new Item(UniqueKey++, "해파리", ItemType.Consumable, 1000, SetItemStatus(e_ItemStatusType.AdditionalDamage, 5), "먹으면 따끔합니다! 공격력이 5 증가하는 음식입니다."));
+            ItemInfos.Add(new Item(UniqueKey++, "해파리", ItemType.Consumable, 1000, SetItemStatus(e_ItemStatusType.Attack, 5), "먹으면 따끔합니다! 공격력이 5 증가하는 음식입니다."));
 
             specialItems.Add(new Item(UniqueKey++, "늑대 클로", ItemType.Weapon, 9000, SetItemStatus(e_ItemStatusType.Attack, 35), "늑대의 발톱으로 만들었습니다. 도적이 되고 싶은 자, 여기로...", true));
             specialItems.Add(new Item(UniqueKey++, "범고래의 꼬리뼈", ItemType.Weapon, 9500, SetItemStatus(e_ItemStatusType.Attack, 38), "날카롭고 아픕니다! 펭귄은 이제 썰어버릴 수 있습니다.", true));

@@ -1,4 +1,4 @@
-﻿using System;
+﻿ausing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -190,7 +190,7 @@ namespace ConsoleGame.Managers
                 }
                 dicEquipItem[item.Type] = item;
                 item.Equipped = true;
-                Game.instance.questManager.dicQuestInfos[2].OnCheckEvent(2, 1);
+                Game.instance.questManager.dicQuestInfos[1].OnCheckEvent(1, 1);
                 AddItemStatBonus(item);
             }
             Console.WriteLine("\t[아이템]{0}을/를 장착{1}하였습니다.", item.Name, CheckedEquipItem(item) ? " " : " 해제");
@@ -255,7 +255,7 @@ namespace ConsoleGame.Managers
                         break;
                 }
             }
-            Game.instance.questManager.dicQuestInfos[3].OnCheckEvent(3, player.AttackPower, player.DefensePower);
+            Game.instance.questManager.dicQuestInfos[2].OnCheckEvent(2, player.AttackPower, player.DefensePower);
         }
 
         public void RemoveItemStatBonus(Item item)

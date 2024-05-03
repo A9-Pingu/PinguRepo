@@ -13,7 +13,6 @@ namespace ConsoleGame.Managers
             int selectedIndex;
             while (true)
             {
-                //Console.Write("번호를 입력하세요: ");
                 bool getkey = int.TryParse(Console.ReadLine(), out selectedIndex);
                 if (selectedIndex >= minIndex && selectedIndex <= maxIndex && getkey)
                 {

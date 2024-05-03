@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Threading;
 using ConsoleGame.Managers;
 
 namespace ConsoleGame
@@ -17,29 +18,32 @@ namespace ConsoleGame
         public string Name { get; set; }
         public JobType Job { get; set; }
         public int Level { get; set; }
-        public LevelUp LevelUp { get; set; }
-        public int Exp { get; set; }
-        public int MaxExp { get; set; }
+        public int Exp { get; set; }         // 경험치 추가
+        public int MaxExp { get; set; }     // 최대 경험치
         public int AttackPower { get; set; }
         public int DefensePower { get; set; }
         public int Health { get; set; }
-        public int MaxHealth { get; set; } = 100;
-        public int Gold { get; set; }
         public int OriginHealth { get; set; }  // 기본 체력
 
         public int AdditionalDamage { get; set; } = 0;
-
         public int DungeonClearCount { get; private set; } = 0;
         public int MP { get; set; } = 50;
 
+        public int Gold { get; set; }
+
+        public int MaxHealth { get; private set; } = 100;  // 최대 체력 속성 추가
+        //public Character origin { get; set; }  // 기본 체력
         public InventoryManager InventoryManager { get; set; }
+
+
+        public LevelUp LevelUp { get; set; }
 
         public delegate void SkillAction(Character player, Enemy enemy, int skillIndex);
         private SkillAction[] SkillSet;
 
-        private readonly string[] WarriorSkills = { "펭귄 슬래시 - MP 10", "크로스 어택 - MP 15" };
-        private readonly string[] MageSkills = { "펭귄 행진곡 - MP 15", "아르페지오 - MP 20" };
-        private readonly string[] RogueSkills = { "더블 펭펭이 - MP 10", "스프릿 대거 - MP 15" };
+        private readonly string[] WarriorSkills = { "펭귄 슬래시 (MP 10)", "크로스 어택 (MP 15)" };
+        private readonly string[] MageSkills = { "펭귄 행진곡 (MP 15)", "아르페지오 (MP 20)" };
+        private readonly string[] RogueSkills = { "더블 펭펭이 (MP 10)", "스프릿 대거 (MP 15)" };
 
 
         public Character(string name, JobType job)
@@ -52,13 +56,27 @@ namespace ConsoleGame
             DefensePower = 5;
             Gold = 35000;
             Health = MaxHealth;
+            MP = 50;
 
             // 최대 경험치를 초기화합니다. 예를 들어 레벨이 1일 때 최대 경험치를 설정할 수 있습니다.
             MaxExp = CalculateMaxExp(Level);
-            InventoryManager = new InventoryManager(this);
             InitializeSkillSet();
         }
 
+        public Character DeepCopy()
+        {
+            Character newcopy = new Character(Name, Job);
+            newcopy.Level = Level;
+            newcopy.Exp = Exp;
+            newcopy.MaxExp = MaxExp;
+            newcopy.AttackPower = AttackPower;
+            newcopy.DefensePower = DefensePower;
+            newcopy.Health = Health;
+            newcopy.MaxHealth = MaxHealth;
+            newcopy.Gold = Gold;
+            newcopy.MP = MP;
+            return newcopy;
+        }
         private void InitializeSkillSet()
         {
             // 각 직업에 따라 스킬을 선택하고 사용합니다.
@@ -92,15 +110,15 @@ namespace ConsoleGame
         //플레이어공격(일반,스킬)
         public void Attack(Enemy enemy)
         {
-            if (!enemy.IsUseItem())
+            if(!enemy.IsUseItem())
             {
                 Console.WriteLine("===================");
                 Console.WriteLine("1. 일반공격");
                 Console.WriteLine("2. 스킬공격");
                 Console.WriteLine("===================");
-                int action = Game.instance.inputManager.GetValidSelectedIndex(2, 1);
+                int action = Game.instance.inputManager.GetValidSelectedIndex(2,1);
                 //일반공격
-                if (action == 1)
+                if (action == 1) 
                 {
                     Random random = new Random();
                     double percentage = random.NextDouble() * 0.10 - 0.05; //공격력 10% 오차범위
@@ -151,14 +169,14 @@ namespace ConsoleGame
             Console.WriteLine($"Lv.{enemy.Level} {enemy.Name} HP {enemy.Health} ATK {enemy.Attack}");
             Console.WriteLine("\n[내정보]");
             Console.WriteLine($"Lv.{Level} {Name} ({Job})");
-            Console.WriteLine($"HP {Health}/{MaxHealth}");
+            Console.WriteLine($"HP {Health}/{Game.instance.dungeon.origin.Health}");
             Console.WriteLine($"MP {MP}/50");
 
             Console.WriteLine("\n[스킬]");
             string[] skills = GetSkillList();
             for (int i = 0; i < skills.Length; i++)
             {
-                Console.WriteLine($"{i + 1}. {skills[i]}");
+                Console.WriteLine($"{i + 1}. {skills[i]}"); 
             }
             Console.WriteLine("0. 취소");
 
@@ -348,6 +366,5 @@ namespace ConsoleGame
             InventoryManager.RemoveItem(item, count);
             Console.WriteLine($"{item.Name}을 {count}개를 사용하였습니다.");
         }
-
     }
 }

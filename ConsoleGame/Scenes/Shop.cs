@@ -32,7 +32,8 @@ namespace ConsoleGame.Scenes
                         ShowItemActions(ItemType.Armor);
                         break;
                     case "3":
-                        ShowItemActions(ItemType.Consumable);
+                        ShowConsumables();            // 소모품 목록 출력
+                        BuyConsumable();      // 소모품 구매
                         break;
                     case "0":
                         return;
@@ -135,11 +136,9 @@ namespace ConsoleGame.Scenes
 
         private void BuyConsumable()
         {
-            ShowConsumables();            // 소모품 목록 출력
-            Console.WriteLine("구매할 아이템 번호를 선택해주세요. (취소: 0)");
+            Console.Write("구매할 아이템 번호를 입력하세요: ");
             if (int.TryParse(Console.ReadLine(), out int itemIndex))
             {
-                if(itemIndex ==  0) { return; }
                 var consumables = item.ItemInfos.Where(item => item.Type == ItemType.Consumable || item.Type == ItemType.All).ToList();
 
                 if (itemIndex >= 1 && itemIndex <= consumables.Count)
