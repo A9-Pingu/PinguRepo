@@ -1,4 +1,4 @@
-﻿using ConsoleGame.Managers;
+using ConsoleGame.Managers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -14,16 +14,15 @@ namespace ConsoleGame.Scenes
     public class DungeonScene
     {
         private Character player;
-        public Character origin;
         private Random random;
         private Random random2 = new Random();
         private Dungeon dungeon;
+        bool useItem = false;
 
         public DungeonScene(Character character)
         {
             player = character;
-            origin = player.DeepCopy();
-            origin.Health = player.Health;
+            Random random = new Random(Guid.NewGuid().GetHashCode());
         }
 
         //던전 입장 조건
@@ -59,18 +58,20 @@ namespace ConsoleGame.Scenes
             }
         }
 
+
         List<Enemy> deadMonsters = new List<Enemy>(); //죽은 몬스터 수
         List<Enemy> selectedMonsters;
         public void Start(Difficulty difficulty)
         {
+            player.OriginHealth = player.Health; //플레이어 초기 체력
             selectedMonsters = SelectMonsters(difficulty);
 
             Game.instance.uiManager.BattleScene(difficulty, selectedMonsters, player, false); //초기화면
-            Game.instance.inputManager.GetValidSelectedIndex(1,1);
+            Game.instance.inputManager.GetValidSelectedIndex(1, 1);
             while (true)
             {
                 Game.instance.uiManager.BattleScene(difficulty, selectedMonsters, player, true);
-                int inputKey = Game.instance.inputManager.GetValidSelectedIndex(selectedMonsters.Count);
+                int inputKey = Game.instance.inputManager.GetValidSelectedIndex(selectedMonsters.Count + 1);
                 if (inputKey == 0)
                 {
                     Console.WriteLine("===================");
@@ -84,6 +85,7 @@ namespace ConsoleGame.Scenes
                         continue;
                 }
                 Battle(inputKey); //배틀 시작
+                //UseItem();
                 if (player.Health <= 0) //플레이어 사망
                 {
                     LoseScene();
@@ -94,6 +96,9 @@ namespace ConsoleGame.Scenes
                     ClearDungeon();
                     return;
                 }
+                //위치 바뀌어야함
+                UseItem();
+                Game.instance.inputManager.InputAnyKey();
             }
         }
         private List<Enemy> SelectMonsters(Difficulty difficulty)
@@ -145,11 +150,12 @@ namespace ConsoleGame.Scenes
         //던전에서 공격 시작 후 전투장면
         private void Battle(int EnemyNum)
         {
-            player.Attack(selectedMonsters[EnemyNum-1]); //플레이어 공격
-            if (selectedMonsters[EnemyNum-1].Health <= 0)
+            player.Attack(selectedMonsters[EnemyNum - 1]); //플레이어 공격
+            if (selectedMonsters[EnemyNum - 1].Health <= 0)
             {
                 deadMonsters.Add(selectedMonsters[EnemyNum - 1]);
                 selectedMonsters[EnemyNum - 1].isDead = true; //Dead회색표시
+                Game.instance.questManager.dicQuestInfos[1].OnCheckEvent(1, 1);
             }
             for (int i = 0; i < selectedMonsters.Count; i++)
             {
@@ -161,15 +167,13 @@ namespace ConsoleGame.Scenes
         //전투 패배 장면
         private void LoseScene()
         {
-            deadMonsters.Clear();
             Console.WriteLine("===================");
             Console.WriteLine("\nBattle!! - Result");
             Console.WriteLine("\nYou Lose.");
             Console.WriteLine("\n전투에서 패배하였습니다.");
             Console.WriteLine($"\nLv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {origin.Health} -> Dead\n");
-            Console.WriteLine("0. 다음\n");
-            Game.instance.inputManager.GetValidSelectedIndex(0);
+            Console.WriteLine($"HP {player.MaxHealth} -> {player.Health}");
+            //대기
         }
 
         private void UseCharacterSkill(Character player, Enemy enemy)
@@ -209,13 +213,14 @@ namespace ConsoleGame.Scenes
         private void ClearDungeon()
         {
             deadMonsters.Clear();
-            int damage = origin.Health - player.Health;
+
+            int damage = player.OriginHealth - player.Health;
             Console.WriteLine("===================");
             Console.WriteLine("\nBattle!! - Result");
             Console.WriteLine("\nVictory");
             Console.WriteLine("\n던전에서 몬스터 3마리를 잡았습니다.");
             Console.WriteLine($"\nLv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {origin.Health} -> {player.Health}");
+            Console.WriteLine($"HP {player.OriginHealth} -> {player.Health}");
             Console.WriteLine($"\n기본 보상: {dungeon.baseReward} G");
             Console.WriteLine($"\n던전 클리어! 체력 {damage} 소모됨.");
             Console.WriteLine($"남은 체력: {player.Health}\n");

@@ -13,6 +13,7 @@ namespace ConsoleGame.Managers
 {
     public class UIManager
     {
+
         public void DisplayMainMenu()
         {
             Console.Clear();
@@ -47,7 +48,7 @@ namespace ConsoleGame.Managers
             // 장착한 아이템 정보 출력
             if (player.InventoryManager.dicEquipItem[ItemType.Weapon] != null)
             {
-                Console.WriteLine($"- {player.InventoryManager.dicEquipItem[ItemType.Weapon].Name} (무기) : +{player.InventoryManager.dicEquipItem[ItemType.Weapon].StatBonus}");
+                Console.WriteLine($"- {player.InventoryManager.dicEquipItem[ItemType.Weapon].Name} (무기) : +{player.InventoryManager.dicEquipItem[ItemType.Weapon].dicStatusBonus[e_ItemStatusType.Attack]}");
             }
             else
             {
@@ -63,23 +64,24 @@ namespace ConsoleGame.Managers
                 Console.WriteLine("장착한 방어구아이템이 없습니다.");
             }
 
+
             Game.instance.inputManager.InputAnyKey();
         }
 
         public bool DisplayInventory(InventoryManager inventory)
         {
             Console.Clear();
-            if (inventory.Inventory.Count == 0)
+            if (inventory.dicInventory.Count == 0)
             {
                 Console.WriteLine("인벤토리가 비어 있습니다.");
                 return false;
             }
 
             Console.WriteLine("인벤토리");
-            Console.WriteLine($"아이템 개수: {inventory.Inventory.Count}\n");
+            Console.WriteLine($"아이템 개수: {inventory.dicInventory.Count}\n");
 
             int index = 1;
-            foreach (var item in inventory.Inventory)
+            foreach (var item in inventory.dicInventory)
             {
                 Console.WriteLine($"- {index++}. {item.Value.Name} ({item.Value.Type}) : {(item.Value.Type == ItemType.Consumable ? "" : item.Value.Equipped ? "장착됨" : "미장착")}  |  * {item.Value.Count} | {item.Value.Description}");
             }
@@ -127,10 +129,7 @@ namespace ConsoleGame.Managers
             int index = 1;
             Game.instance.itemManager.ItemInfos.FindAll(obj => obj.Type == itemType).ForEach(obj => Console.WriteLine($"- {index++}. {obj.Name} : {obj.Price} G | {obj.Description}"));
 
-            Console.WriteLine("\n1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매");
-            Console.WriteLine("0. 나가기");
-            Console.Write("원하시는 행동을 선택해주세요.\n>> ");
+
         }
 
         public void ShowRestMenu()
@@ -188,7 +187,7 @@ namespace ConsoleGame.Managers
             }
             Console.WriteLine("\n[플레이어 정보]");
             Console.WriteLine($"Lv.{player.Level} {player.Name} ({player.Job})");
-            Console.WriteLine($"HP {player.Health}/{Game.instance.dungeon.origin.Health}");
+            Console.WriteLine($"HP {player.Health}/{player.MaxHealth}");
             if (isFighting)
             {
                 Console.WriteLine("\n0. 취소");
@@ -197,9 +196,10 @@ namespace ConsoleGame.Managers
             else
             {
                 Console.WriteLine("\n1. 공격");
+                Console.WriteLine("2. 아이템 사용");
                 Console.WriteLine("\n원하시는 행동을 입력해주세요.");
             }
-            Console.Write(">> "); 
+            Console.Write(">> ");
         }
     }
 }
