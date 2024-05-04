@@ -22,8 +22,8 @@ namespace ConsoleGame
         public GuildScene guild { get; set; }
         #endregion
         public Character player;
-       
-        
+
+
         public bool isPlaying = true;
         public Game()
         {
@@ -46,7 +46,7 @@ namespace ConsoleGame
         }
 
         public void Run()
-        {          
+        {
             while (isPlaying)
             {
                 uiManager.DisplayMainMenu();

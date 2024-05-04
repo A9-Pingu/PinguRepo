@@ -1,14 +1,4 @@
-﻿using ConsoleGame.Scenes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
+﻿
 namespace ConsoleGame.Managers
 {
     public class UIManager
@@ -163,7 +153,7 @@ namespace ConsoleGame.Managers
             Console.WriteLine("===================");
             Console.WriteLine("\n     Battle!!     \n");
             int index = 1;
-            
+
             foreach (var monster in selectedMonsters)
             {
                 if (isReadyToFight) // 1. 공격 선택
@@ -203,5 +193,4 @@ namespace ConsoleGame.Managers
         }
     }
 }
-
 

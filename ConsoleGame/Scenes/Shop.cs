@@ -28,7 +28,7 @@ namespace ConsoleGame.Scenes
                     case "1":
                         ShowItemActions(ItemType.Weapon);
                         break;
-                    case "2":                       
+                    case "2":
                         ShowItemActions(ItemType.Armor);
                         break;
                     case "3":
@@ -123,7 +123,7 @@ namespace ConsoleGame.Scenes
             int index = 1;
             foreach (var item in item.ItemInfos.Where(item => item.Type == ItemType.Consumable || item.Type == ItemType.All))
             {
-                Console.WriteLine($"- {index++}. {item.Name} : {item.Price} G");
+                Console.WriteLine($"- {index++}. {item.Name} : {item.Price} G | {item.Description}");
             }
 
             if (index == 1)
@@ -139,7 +139,7 @@ namespace ConsoleGame.Scenes
             Console.WriteLine("구매할 아이템 번호를 선택해주세요. (취소: 0)");
             if (int.TryParse(Console.ReadLine(), out int itemIndex))
             {
-                if(itemIndex ==  0) { return; }
+                if (itemIndex == 0) { return; }
                 var consumables = item.ItemInfos.Where(item => item.Type == ItemType.Consumable || item.Type == ItemType.All).ToList();
 
                 if (itemIndex >= 1 && itemIndex <= consumables.Count)
@@ -168,7 +168,7 @@ namespace ConsoleGame.Scenes
                 if (player.Gold >= totalPrice)
                 {
                     player.Gold -= totalPrice;
-                    player.InventoryManager.AddItem(item, quantity);                    
+                    player.InventoryManager.AddItem(item, quantity);
                     Console.WriteLine($"{item.Name} {quantity}개를 구매했습니다.");
                 }
                 else
@@ -223,7 +223,7 @@ namespace ConsoleGame.Scenes
                 if (item.Type == ItemType.Weapon || item.Type == ItemType.Armor)
                 {
                     bool isContinue = ReleasedAndSellingEquipment(item.UniqueKey, quantity);
-                    if(!isContinue) 
+                    if (!isContinue)
                     {
                         return;
                     }
@@ -231,7 +231,7 @@ namespace ConsoleGame.Scenes
 
                 int totalPrice = (int)(item.Price * quantity * 0.85);
                 player.Gold += totalPrice;
-                Console.WriteLine($"{item.Name} {quantity}개를 총 {totalPrice}G에 판매했습니다.");               
+                Console.WriteLine($"{item.Name} {quantity}개를 총 {totalPrice}G에 판매했습니다.");
                 player.InventoryManager.RemoveItem(item, quantity);
             }
             else

@@ -16,27 +16,30 @@ namespace ConsoleGame.Scenes
         private Character player;
         private Random random;
         private Random random2 = new Random();
+        public Character origin; ////////´øÀü¿¡ ±íÀº º¹»ç
         private Dungeon dungeon;
         bool useItem = false;
 
         public DungeonScene(Character character)
         {
             player = character;
+            origin = player.DeepCopy(); ////////´øÀü¿¡ ±íÀº º¹»ç
+            origin.Health = player.Health; ////////´øÀü¿¡ ±íÀº º¹»ç
             Random random = new Random(Guid.NewGuid().GetHashCode());
         }
 
-        //ë˜ì „ ì…ì¥ ì¡°ê±´
+        //´øÀü ÀÔÀå Á¶°Ç
         public void EnterDungeon()
         {
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine("===================");
-                Console.WriteLine("1. ì‰¬ìš´ ë˜ì „     | ëˆ„êµ¬ë‚˜ ê°€ëŠ¥");
-                Console.WriteLine("2. ì¼ë°˜ ë˜ì „     | ë°©ì–´ë ¥ 12 ì´ìƒ ê¶Œì¥");
-                Console.WriteLine("3. ì–´ë ¤ìš´ ë˜ì „    | ë°©ì–´ë ¥ 24 ì´ìƒ ê¶Œì¥");
-                Console.WriteLine("0. ë‚˜ê°€ê¸°");
-                Console.Write("ì›í•˜ì‹œëŠ” í–‰ë™ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.\n>> ");
+                Console.WriteLine("1. ½¬¿î ´øÀü     | ´©±¸³ª °¡´É");
+                Console.WriteLine("2. ÀÏ¹İ ´øÀü     | ¹æ¾î·Â 30 ÀÌ»ó ±ÇÀå");
+                Console.WriteLine("3. ¾î·Á¿î ´øÀü    | ¹æ¾î·Â 50 ÀÌ»ó ±ÇÀå");
+                Console.WriteLine("0. ³ª°¡±â");
+                Console.Write("¿øÇÏ½Ã´Â Çàµ¿À» ÀÔ·ÂÇØÁÖ¼¼¿ä.\n>> ");
 
                 int InputKey = Game.instance.inputManager.GetValidSelectedIndex((int)Difficulty.Max - 1);
                 dungeon = new Dungeon((Difficulty)InputKey);
@@ -46,12 +49,11 @@ namespace ConsoleGame.Scenes
 
                 else if (InputKey != 0 && dungeon.requiredDefense < player.DefensePower)
                 {
-                    Start(dungeon.difficulty);
-                    DropSpecialItem(dungeon.difficulty);
+                    Start(dungeon.difficulty); ;
                 }
                 else
                 {
-                    Console.WriteLine($"ë°©ì–´ë ¥ì´ {dungeon.requiredDefense} ì´ìƒì´ì–´ì•¼ {dungeon.difficulty} ë˜ì „ì— ì…ì¥í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
+                    Console.WriteLine($"¹æ¾î·ÂÀÌ {dungeon.requiredDefense} ÀÌ»óÀÌ¾î¾ß {dungeon.difficulty} ´øÀü¿¡ ÀÔÀåÇÒ ¼ö ÀÖ½À´Ï´Ù.");
                     Game.instance.inputManager.InputAnyKey();
                     Console.Clear();
                 }
@@ -59,14 +61,14 @@ namespace ConsoleGame.Scenes
         }
 
 
-        List<Enemy> deadMonsters = new List<Enemy>(); //ì£½ì€ ëª¬ìŠ¤í„° ìˆ˜
+        List<Enemy> deadMonsters = new List<Enemy>(); //Á×Àº ¸ó½ºÅÍ ¼ö
         List<Enemy> selectedMonsters;
         public void Start(Difficulty difficulty)
         {
-            player.OriginHealth = player.Health; //í”Œë ˆì´ì–´ ì´ˆê¸° ì²´ë ¥
+            player.OriginHealth = player.Health; //ÇÃ·¹ÀÌ¾î ÃÊ±â Ã¼·Â
             selectedMonsters = SelectMonsters(difficulty);
 
-            Game.instance.uiManager.BattleScene(difficulty, selectedMonsters, player, false); //ì´ˆê¸°í™”ë©´
+            Game.instance.uiManager.BattleScene(difficulty, selectedMonsters, player, false); //ÃÊ±âÈ­¸é
             Game.instance.inputManager.GetValidSelectedIndex(1, 1);
             while (true)
             {
@@ -75,54 +77,54 @@ namespace ConsoleGame.Scenes
                 if (inputKey == 0)
                 {
                     Console.WriteLine("===================");
-                    Console.WriteLine("ì´ëŒ€ë¡œ ë˜ì „ì„ ë‚˜ê°€ì‹œê² ìŠµë‹ˆê¹Œ?");
-                    Console.WriteLine("1. ë„¤");
-                    Console.WriteLine("0. ì•„ë‹ˆì˜¤");
+                    Console.WriteLine("ÀÌ´ë·Î ´øÀüÀ» ³ª°¡½Ã°Ú½À´Ï±î?");
+                    Console.WriteLine("1. ³×");
+                    Console.WriteLine("0. ¾Æ´Ï¿À");
                     int nextKey = Game.instance.inputManager.GetValidSelectedIndex(1);
                     if (nextKey == 1)
                         return;
                     else
                         continue;
                 }
-                Battle(inputKey); //ë°°í‹€ ì‹œì‘
+                Battle(inputKey); //¹èÆ² ½ÃÀÛ
                 //UseItem();
-                if (player.Health <= 0) //í”Œë ˆì´ì–´ ì‚¬ë§
+                if (player.Health <= 0) //ÇÃ·¹ÀÌ¾î »ç¸Á
                 {
                     LoseScene();
                     return;
                 }
-                else if (deadMonsters.Count == 3) //ëª¨ë“  ëª¬ìŠ¤í„° ì‚¬ë§
+                else if (deadMonsters.Count == 3) //¸ğµç ¸ó½ºÅÍ »ç¸Á
                 {
                     ClearDungeon();
                     return;
                 }
-                //ìœ„ì¹˜ ë°”ë€Œì–´ì•¼í•¨
+                //À§Ä¡ ¹Ù²î¾î¾ßÇÔ
                 UseItem();
                 Game.instance.inputManager.InputAnyKey();
             }
         }
         private List<Enemy> SelectMonsters(Difficulty difficulty)
         {
-            // ëª¨ë“  ëª¬ìŠ¤í„°
+            // ¸ğµç ¸ó½ºÅÍ
             List<Enemy> allMonsters = new List<Enemy>
             {
-                new Enemy("ë„ë‘‘ê°ˆë§¤ê¸°", 2),
-                new Enemy("ë„ë‘‘ê°ˆë§¤ê¸°", 2),
-                new Enemy("ì•¼ìƒë“¤ê°œ", 2),
-                new Enemy("ì•¼ìƒë“¤ê°œ", 2),
-                new Enemy("ì—¬ìš°", 2),
-                new Enemy("ì—¬ìš°", 2),
-                new Enemy("ë°”ë‹¤í‘œë²”", 3),
-                new Enemy("ë°”ë‹¤í‘œë²”", 3),
-                new Enemy("ëŠ‘ëŒ€", 3),
-                new Enemy("ëŠ‘ëŒ€", 3),
-                new Enemy("ë¶ê·¹ê³°", 4),
-                new Enemy("ë¶ê·¹ê³°", 4),
-                new Enemy("ë²”ê³ ë˜", 5),
-                new Enemy("ë²”ê³ ë˜", 5),
+                new Enemy("µµµÏ°¥¸Å±â", 2),
+                new Enemy("µµµÏ°¥¸Å±â", 2),
+                new Enemy("¾ß»ıµé°³", 2),
+                new Enemy("¾ß»ıµé°³", 2),
+                new Enemy("¿©¿ì", 2),
+                new Enemy("¿©¿ì", 2),
+                new Enemy("¹Ù´ÙÇ¥¹ü", 3),
+                new Enemy("¹Ù´ÙÇ¥¹ü", 3),
+                new Enemy("´Á´ë", 3),
+                new Enemy("´Á´ë", 3),
+                new Enemy("ºÏ±Ø°õ", 4),
+                new Enemy("ºÏ±Ø°õ", 4),
+                new Enemy("¹ü°í·¡", 5),
+                new Enemy("¹ü°í·¡", 5),
             };
 
-            //ë‚œì´ë„ë³„ ëœë¤ ëª¬ìŠ¤í„° 3ë§ˆë¦¬ ì„ íƒ
+            //³­ÀÌµµº° ·£´ı ¸ó½ºÅÍ 3¸¶¸® ¼±ÅÃ
             int difficultyIndex = difficulty switch
             {
                 Difficulty.Easy => 0,
@@ -147,45 +149,47 @@ namespace ConsoleGame.Scenes
             return selectedMonsters1;
         }
 
-        //ë˜ì „ì—ì„œ ê³µê²© ì‹œì‘ í›„ ì „íˆ¬ì¥ë©´
+        //´øÀü¿¡¼­ °ø°İ ½ÃÀÛ ÈÄ ÀüÅõÀå¸é
         private void Battle(int EnemyNum)
         {
-            player.Attack(selectedMonsters[EnemyNum - 1]); //í”Œë ˆì´ì–´ ê³µê²©
+            player.Attack(selectedMonsters[EnemyNum - 1]); //ÇÃ·¹ÀÌ¾î °ø°İ
             if (selectedMonsters[EnemyNum - 1].Health <= 0)
             {
                 deadMonsters.Add(selectedMonsters[EnemyNum - 1]);
-                selectedMonsters[EnemyNum - 1].isDead = true; //DeadíšŒìƒ‰í‘œì‹œ
+                selectedMonsters[EnemyNum - 1].isDead = true; //DeadÈ¸»öÇ¥½Ã
                 Game.instance.questManager.dicQuestInfos[1].OnCheckEvent(1, 1);
             }
             for (int i = 0; i < selectedMonsters.Count; i++)
             {
-                if (!deadMonsters.Contains(selectedMonsters[i]) && !player.SkillFail()) //ëª¬ìŠ¤í„°ìƒì¡´ + í”Œë ˆì´ì–´ ìŠ¤í‚¬ê³µê²© ë˜ëŠ” ì¼ë°˜ê³µê²© ìœ íš¨
-                    selectedMonsters[i].EnemyAttack(player); //ëª¬ìŠ¤í„° ê³µê²©
+                if (!deadMonsters.Contains(selectedMonsters[i]) && !player.SkillFail()) //¸ó½ºÅÍ»ıÁ¸ + ÇÃ·¹ÀÌ¾î ½ºÅ³°ø°İ ¶Ç´Â ÀÏ¹İ°ø°İ À¯È¿
+                    selectedMonsters[i].EnemyAttack(player); //¸ó½ºÅÍ °ø°İ
             }
         }
 
-        //ì „íˆ¬ íŒ¨ë°° ì¥ë©´
+        //ÀüÅõ ÆĞ¹è Àå¸é
         private void LoseScene()
         {
             Console.WriteLine("===================");
             Console.WriteLine("\nBattle!! - Result");
             Console.WriteLine("\nYou Lose.");
-            Console.WriteLine("\nì „íˆ¬ì—ì„œ íŒ¨ë°°í•˜ì˜€ìŠµë‹ˆë‹¤.");
+            Console.WriteLine("\nÀüÅõ¿¡¼­ ÆĞ¹èÇÏ¿´½À´Ï´Ù.");
             Console.WriteLine($"\nLv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {player.MaxHealth} -> {player.Health}");
-            //ëŒ€ê¸°
+            Console.WriteLine($"HP {origin.Health} -> Dead\n"); ////////´øÀü¿¡ ±íÀº º¹»ç
+            Console.WriteLine("0. ´ÙÀ½\n");
+            Game.instance.inputManager.GetValidSelectedIndex(0);
+            //´ë±â
         }
 
         private void UseCharacterSkill(Character player, Enemy enemy)
         {
-            // ìŠ¤í‚¬ ì‚¬ìš© ë©”ì„œë“œ í˜¸ì¶œ
+            // ½ºÅ³ »ç¿ë ¸Ş¼­µå È£Ãâ
             player.UseSkill(enemy);
         }
 
         private void UseItem()
         {
             Console.WriteLine("===================");
-            Console.WriteLine("ì‚¬ìš©í•  ì•„ì´í…œì„ ì„ íƒí•˜ì„¸ìš”.");
+            Console.WriteLine("»ç¿ëÇÒ ¾ÆÀÌÅÛÀ» ¼±ÅÃÇÏ¼¼¿ä.");
             List<Item> consumable = new List<Item>();
             foreach (var item in player.InventoryManager.dicInventory)
             {
@@ -194,9 +198,9 @@ namespace ConsoleGame.Scenes
                     consumable.Add(item.Value);
                 }
             }
-            
+
             int itemIndex = 1;
-            foreach (var item in consumable) 
+            foreach (var item in consumable)
             {
                 Console.WriteLine($"- {itemIndex++}. {item.Name} * {item.Count} | {item.Description}");
             }
@@ -209,7 +213,7 @@ namespace ConsoleGame.Scenes
             Thread.Sleep(2000);
         }
 
-        //ì „íˆ¬ ìŠ¹ë¦¬ í™”ë©´
+        //ÀüÅõ ½Â¸® È­¸é
         private void ClearDungeon()
         {
             deadMonsters.Clear();
@@ -218,25 +222,25 @@ namespace ConsoleGame.Scenes
             Console.WriteLine("===================");
             Console.WriteLine("\nBattle!! - Result");
             Console.WriteLine("\nVictory");
-            Console.WriteLine("\në˜ì „ì—ì„œ ëª¬ìŠ¤í„° 3ë§ˆë¦¬ë¥¼ ì¡ì•˜ìŠµë‹ˆë‹¤.");
+            Console.WriteLine("\n´øÀü¿¡¼­ ¸ó½ºÅÍ 3¸¶¸®¸¦ Àâ¾Ò½À´Ï´Ù.");
             Console.WriteLine($"\nLv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {player.OriginHealth} -> {player.Health}");
-            Console.WriteLine($"\nê¸°ë³¸ ë³´ìƒ: {dungeon.baseReward} G");
-            Console.WriteLine($"\në˜ì „ í´ë¦¬ì–´! ì²´ë ¥ {damage} ì†Œëª¨ë¨.");
-            Console.WriteLine($"ë‚¨ì€ ì²´ë ¥: {player.Health}\n");
+            Console.WriteLine($"HP {origin.Health} -> {player.Health}");////////´øÀü¿¡ ±íÀº º¹»ç
+            Console.WriteLine($"\n±âº» º¸»ó: {dungeon.baseReward} G");
+            Console.WriteLine($"\n´øÀü Å¬¸®¾î! Ã¼·Â {damage} ¼Ò¸ğµÊ.");
+            Console.WriteLine($"³²Àº Ã¼·Â: {player.Health}\n");
 
-            player.Exp += 5;       // ì ì„ ë¬¼ë¦¬ì¹  ë•Œë§ˆë‹¤ ê²½í—˜ì¹˜ 1 ì¦ê°€
-            Console.WriteLine($"\nê²½í—˜ì¹˜íšë“: {player.Exp}");
+            player.Exp += 5;       // ÀûÀ» ¹°¸®Ä¥ ¶§¸¶´Ù °æÇèÄ¡ 1 Áõ°¡
+            Console.WriteLine($"\n°æÇèÄ¡È¹µæ: {player.Exp}");
 
             player.LevelUp.CheckLevelUp();
 
             Random random = new Random(Guid.NewGuid().GetHashCode());
-            if (random.Next(1, 101) <= 20) //15~20% í™•ë¥ ë¡œ ì•„ì´í…œ ë“œë¡­
+            if (random.Next(1, 101) <= 20) //15~20% È®·ü·Î ¾ÆÀÌÅÛ µå·Ó
             {
                 DropHighTierItem();
                 DropSpecialItem(dungeon.difficulty);
             }
-            Console.WriteLine("0. ë‹¤ìŒ\n");
+            Console.WriteLine("0. ´ÙÀ½\n");
             Console.Write(">>");
             Game.instance.inputManager.GetValidSelectedIndex(0);
         }
@@ -244,31 +248,31 @@ namespace ConsoleGame.Scenes
         private int DropHighTierItem()
         {
             Random random = new Random(Guid.NewGuid().GetHashCode());
-            double percentage = random.Next(10, 21) / 100.0; // 10% ~ 20% ëœë¤ ê°’
+            double percentage = random.Next(10, 21) / 100.0; // 10% ~ 20% ·£´ı °ª
 
-            int additionalReward = (int)(player.AttackPower * percentage);  // double ê°’ì„ intë¡œ ìºìŠ¤íŒ…
+            int additionalReward = (int)(player.AttackPower * percentage);  // double °ªÀ» int·Î Ä³½ºÆÃ
 
             return additionalReward;
         }
 
         private void DropSpecialItem(Difficulty difficulty)
         {
-            // ë…¸ë§ ë˜ì „ë¶€í„° í•˜ë“œ ë˜ì „ê¹Œì§€ íŠ¹ë³„ ì•„ì´í…œ ë“œë¡­
+            // ³ë¸» ´øÀüºÎÅÍ ÇÏµå ´øÀü±îÁö Æ¯º° ¾ÆÀÌÅÛ µå·Ó
             if (difficulty == Difficulty.Normal ||
                 difficulty == Difficulty.Hard)
             {
-                int rand =  random2.Next(Game.instance.itemManager.specialItems.Count);
-                // ë¬´ì‘ìœ„ë¡œ í•˜ë‚˜ì˜ ì•„ì´í…œ ì„ íƒ
+                int rand = random2.Next(Game.instance.itemManager.specialItems.Count);
+                // ¹«ÀÛÀ§·Î ÇÏ³ªÀÇ ¾ÆÀÌÅÛ ¼±ÅÃ
                 Item droppedItem = Game.instance.itemManager.specialItems[rand];
 
                 Console.WriteLine("===================");
-                Console.WriteLine($"íŠ¹ë³„í•œ ì•„ì´í…œì„ íšë“í•˜ì˜€ìŠµë‹ˆë‹¤: {droppedItem.Name}");
+                Console.WriteLine($"Æ¯º°ÇÑ ¾ÆÀÌÅÛÀ» È¹µæÇÏ¿´½À´Ï´Ù: {droppedItem.Name}");
                 Console.ReadKey();
 
-                // ê·€ì† ì•„ì´í…œì´ë¯€ë¡œ Purchased ê°’ì„ trueë¡œ ì„¤ì •
+                // ±Í¼Ó ¾ÆÀÌÅÛÀÌ¹Ç·Î Purchased °ªÀ» true·Î ¼³Á¤
                 Game.instance.itemManager.UpdateItemPurchasedStatus(droppedItem);
 
-                // ì•„ì´í…œì„ ì¸ë²¤í† ë¦¬ì˜ ì¥ë¹„ ì¹´í…Œê³ ë¦¬ì— ì¶”ê°€
+                // ¾ÆÀÌÅÛÀ» ÀÎº¥Åä¸®ÀÇ Àåºñ Ä«Å×°í¸®¿¡ Ãß°¡
                 player.InventoryManager.AddItem(droppedItem);
             }
         }

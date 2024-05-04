@@ -12,7 +12,7 @@ namespace ConsoleGame.Scenes
         }
         public void RestMenu()
         {
-            while (true) 
+            while (true)
             {
                 Game.instance.uiManager.ShowRestMenu();
 

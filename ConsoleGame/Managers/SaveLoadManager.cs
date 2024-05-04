@@ -10,7 +10,7 @@ namespace ConsoleGame.Managers
     {
         private const string SAVE_FOLDER = "SaveGames";
 
-        public SaveLoadManager() {}  // private 생성자로 외부에서 인스턴스화 방지
+        public SaveLoadManager() { }  // private 생성자로 외부에서 인스턴스화 방지
 
         public Character LoadOrStartGame(InputManager input)
         {
@@ -30,7 +30,7 @@ namespace ConsoleGame.Managers
                 Console.WriteLine("저장된 게임 파일이 없습니다.");
                 Character player = CreateNewCharacter();
                 return player;
-            }            
+            }
         }
 
 

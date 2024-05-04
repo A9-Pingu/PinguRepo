@@ -59,6 +59,21 @@ namespace ConsoleGame
             InitializeSkillSet();
         }
 
+        public Character DeepCopy() //////깊은 복사
+        {
+            Character newcopy = new Character(Name, Job);
+            newcopy.Level = Level;
+            newcopy.Exp = Exp;
+            newcopy.MaxExp = MaxExp;
+            newcopy.AttackPower = AttackPower;
+            newcopy.DefensePower = DefensePower;
+            newcopy.Health = Health;
+            newcopy.MaxHealth = MaxHealth;
+            newcopy.Gold = Gold;
+            newcopy.MP = MP;
+            return newcopy;
+        } //////깊은 복사
+
         private void InitializeSkillSet()
         {
             // 각 직업에 따라 스킬을 선택하고 사용합니다.
@@ -66,7 +81,7 @@ namespace ConsoleGame
             SkillSet[(int)JobType.전사] = UseWarriorSkill;
             SkillSet[(int)JobType.마법사] = UseMageSkill;
             SkillSet[(int)JobType.도적] = UseRogueSkill;
-         }
+        }
 
         private int CalculateMaxExp(int level)
         {
@@ -151,7 +166,7 @@ namespace ConsoleGame
             Console.WriteLine($"Lv.{enemy.Level} {enemy.Name} HP {enemy.Health} ATK {enemy.Attack}");
             Console.WriteLine("\n[내정보]");
             Console.WriteLine($"Lv.{Level} {Name} ({Job})");
-            Console.WriteLine($"HP {Health}/{MaxHealth}");
+            Console.WriteLine($"HP {Health}/{Game.instance.dungeon.origin.Health}");
             Console.WriteLine($"MP {MP}/50");
 
             Console.WriteLine("\n[스킬]");
@@ -333,7 +348,7 @@ namespace ConsoleGame
             while (!int.TryParse(Console.ReadLine(), out skillChoice) || (skillChoice < 0 || skillChoice > 2))
             {
                 Console.WriteLine("잘못된 입력입니다. 다시 입력해주세요.");
-                Console.Write("원하시는 행동을 입력해주세요: ");               
+                Console.Write("원하시는 행동을 입력해주세요: ");
             }
 
             Console.WriteLine($"당신이 {enemy.Name}에게 {AttackPower}의 피해를 입혔습니다.");

@@ -85,20 +85,20 @@ namespace ConsoleGame
                         NowStack = (int)(questData.Value1 + questData.Value2) / 2;
                         break;
                 }
-                
+
                 if (NowStack >= ClearStack)
                 {
                     IsClear = true;
                     this.OnCheckEventHandler -= CheckedQuest;
                     return;
                 }
-            }            
+            }
         }
 
         //value오버로드하기
         public void OnCheckEvent(int index, int value)
         {
-            OnCheckEventHandler?.Invoke(this, new QuestData(index, value));            
+            OnCheckEventHandler?.Invoke(this, new QuestData(index, value));
         }
 
         public void OnCheckEvent(int index, int value1, int value2)
