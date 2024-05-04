@@ -177,7 +177,7 @@ namespace ConsoleGame.Managers
             }
             Console.WriteLine("\n[플레이어 정보]");
             Console.WriteLine($"Lv.{player.Level} {player.Name} ({player.Job})");
-            Console.WriteLine($"HP {player.Health}/{player.MaxHealth}");
+            Console.WriteLine($"HP {player.Health}/{Game.instance.dungeon.origin.Health}"); ///////던전 깊은 복사n
             if (isFighting)
             {
                 Console.WriteLine("\n0. 취소");
@@ -186,7 +186,6 @@ namespace ConsoleGame.Managers
             else
             {
                 Console.WriteLine("\n1. 공격");
-                Console.WriteLine("2. 아이템 사용");
                 Console.WriteLine("\n원하시는 행동을 입력해주세요.");
             }
             Console.Write(">> ");
