@@ -79,10 +79,10 @@ namespace ConsoleGame
                         NowStack++;
                         break;
                     case 2:
-                        NowStack = (int)(questData.Value1 + questData.Value2)/2;                       
+                        NowStack++;
                         break;
                     case 3:
-                        NowStack++;
+                        NowStack = (int)(questData.Value1 + questData.Value2) / 2;
                         break;
                 }
                 
