@@ -105,8 +105,9 @@ namespace ConsoleGame
         private int CalculateMaxExp(int level)
         {
             LevelUp = new LevelUp(this);
-            return level * 100;
+            return (level - 1) * 5 + 10;
         }
+
 
         public bool HasRequiredDefense(int requiredDefense)
         {
