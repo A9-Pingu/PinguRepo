@@ -103,12 +103,6 @@ namespace ConsoleGame.Managers
             }
         }
 
-        // 인덱스로 아이템 조회
-        public Item GetItem(int index)
-        {
-            return dicInventory[index];
-        }
-
         private void ManagedEquip()
         {
             Console.Write("아이템 번호를 입력하세요: ");
