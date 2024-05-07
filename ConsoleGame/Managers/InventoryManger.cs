@@ -145,21 +145,6 @@ namespace ConsoleGame.Managers
             Console.WriteLine("에러 발생");
             return 0;
         }
-        public string GetCategoryName(ItemType itemType)
-        {
-            switch (itemType)
-            {
-                case ItemType.Weapon:
-                case ItemType.Armor:
-                    return "장비";
-                case ItemType.Consumable:
-                    return "소비";
-                case ItemType.All:
-                    return "기타";
-                default:
-                    return "알 수 없음";
-            }
-        }
 
         public bool CheckedEquipItem(Item item)
         {
