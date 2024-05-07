@@ -108,11 +108,6 @@ namespace ConsoleGame
             return level * 100;
         }
 
-        public bool HasRequiredDefense(int requiredDefense)
-        {
-            return DefensePower >= requiredDefense;
-        }
-
         //스킬사용 실패(MP부족)
         bool isSkillFail = false;
         public bool SkillFail()
