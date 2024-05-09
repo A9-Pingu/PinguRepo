@@ -56,7 +56,7 @@ namespace ConsoleGame
 
 
         public void Run()
-        {          
+        {
             while (isPlaying)
             {
                 uiManager.DisplayMainMenu();

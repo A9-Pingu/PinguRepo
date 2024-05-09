@@ -116,6 +116,9 @@ namespace ConsoleGame.Managers
             }
             else
                 Console.WriteLine($"HP {playerPreHP} -> {player.Health}\n");
+            Console.WriteLine("\n0. 다음");
+            Console.Write(">>");
+            Game.instance.inputManager.GetValidSelectedIndex(0);
         }
     }
 }

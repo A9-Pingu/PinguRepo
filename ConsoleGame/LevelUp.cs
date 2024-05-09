@@ -14,7 +14,7 @@ namespace ConsoleGame
 
         public void CheckLevelUp()
         {
-            character = Game.instance.player;
+            character = Game.instance.player
             // 전투에서 이긴 몬스터의 레벨로 가정
             int defeatedMonsterLevel = 1;
             // 몬스터 레벨당 경험치 1로 가정
@@ -44,7 +44,7 @@ namespace ConsoleGame
                 int leftEXP = requiredExp - character.Exp; 
                 Console.WriteLine($"레벨을 위한 경험치가 {leftEXP} 부족합니다.");
             }
-            
+
         }
         private int CalculateRequiredExp(int level)
         {

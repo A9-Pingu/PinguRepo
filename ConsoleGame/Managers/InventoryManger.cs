@@ -22,7 +22,7 @@ namespace ConsoleGame.Managers
         // 인벤토리 초기화
         public void Init(Character data)
         {
-            player = data;
+            player = Game.instance.player;
             dicEquipItem = data.InventoryManager.dicEquipItem;
             dicInventory = data.InventoryManager.dicInventory;
         }
@@ -103,12 +103,6 @@ namespace ConsoleGame.Managers
             }
         }
 
-        // 인덱스로 아이템 조회
-        public Item GetItem(int index)
-        {
-            return dicInventory[index];
-        }
-
         private void ManagedEquip()
         {
             Console.Write("아이템 번호를 입력하세요: ");
@@ -145,21 +139,6 @@ namespace ConsoleGame.Managers
             Console.WriteLine("에러 발생");
             return 0;
         }
-        public string GetCategoryName(ItemType itemType)
-        {
-            switch (itemType)
-            {
-                case ItemType.Weapon:
-                case ItemType.Armor:
-                    return "장비";
-                case ItemType.Consumable:
-                    return "소비";
-                case ItemType.All:
-                    return "기타";
-                default:
-                    return "알 수 없음";
-            }
-        }
 
         public bool CheckedEquipItem(Item item)
         {
@@ -169,10 +148,9 @@ namespace ConsoleGame.Managers
             }
             return false;
         }
-        //장비 장착 or 해제 메소드
+
         public void EquipItem(Item item)
         {
-            //소비아이템 혹은 기타아이템일 경우 반환
             if (item.Type == ItemType.Consumable || item.Type == ItemType.All)
             {
                 Console.WriteLine("장착 아이템이 아닙니다.");
@@ -180,31 +158,25 @@ namespace ConsoleGame.Managers
                 return;
             }
 
-            //같은 타입의 장비칸이 비어있을 경우
+
             if (dicEquipItem[item.Type] == null)
             {
                 dicEquipItem[item.Type] = item;
                 item.Equipped = true;
-                //아이템 효과 추가
                 AddItemStatBonus(item);
-                //퀘스트 클리어 여부 체크
                 Game.instance.questManager.dicQuestInfos[2].OnCheckEvent(2, 1);
                 Console.WriteLine("\t[아이템]{0}을/를 장착하였습니다.", item.Name);
             }
-            //같은 아이템을 장비할 경우 장비 해제
             else if (CheckedEquipItem(item))
             {
-                //아이템 효과 제거
                 RemoveItemStatBonus(item);
                 item.Equipped = false;
                 dicEquipItem[item.Type] = null;
                 Console.WriteLine("\t[아이템]{0}을/를 장착해제하였습니다.", item.Name);
             }
-            //이미 장비한 아이템을 해제하고 선택한 아이템을 장착
             else
             {
                 RemoveItemStatBonus(dicEquipItem[item.Type]);
-                //인벤토리에 남아있는 값 해제
                 foreach (var item2 in dicInventory) 
                 { 
                     if(item2.Value.Count == dicEquipItem[item.Type].Count)
@@ -216,7 +188,6 @@ namespace ConsoleGame.Managers
                 item.Equipped = true;
                 AddItemStatBonus(item);
                 Console.WriteLine("\t[아이템]{0}을/를 장착하였습니다.", item.Name);
-                //퀘스트 클리어 여부 체크
                 Game.instance.questManager.dicQuestInfos[2].OnCheckEvent(2, 1);
 
             }
